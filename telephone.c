@@ -56,30 +56,50 @@ int main(int argc, char **argv)
 
     // Send and Receive Loop
     int i;
+    
     for (i = 0; i < world_size; i++) {
         if (world_rank == i) {
 
             /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            ~~~~~~~~~~~~~~Complete: ~~~~~~~~~~~~~~~~
+            ~~~~~~~~~~~~~~Complete: ~~~~~~~~~~~~~~~~*/
+            //int count = 0;
+            int dest = (i + 1) % world_size;
+            //int tag = 0;
+            //printf("At %d - Sending to %d\n",i,dest);
+            MPI_Send(buf, 
+                len,
+                MPI_BYTE,
+                dest, 
+                0, 
+                MPI_COMM_WORLD);
 
-            MPI_Send();
-
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
         } else if (world_rank == (i+1) % world_size) {
 
             /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            ~~~~~~~~~~~~~~Complete: ~~~~~~~~~~~~~~~~
+            ~~~~~~~~~~~~~~Complete: ~~~~~~~~~~~~~~~~*/
+            //int count = 0;
+            //int source = (i+1) % world_size;
+            //int tag = 0;
+            int source = i;
+            //printf("At %d - Receiving from %d\n",i,source);
+            MPI_Recv(buf, 
+                len,
+                MPI_BYTE,
+                source, 
+                0, 
+                MPI_COMM_WORLD,
+                MPI_STATUS_IGNORE);
 
-            MPI_Recv();
-
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
             garble(buf);
             printf("MPI rank %d received message: %s\n", world_rank, buf);
         }
+        //world_rank = world_rank+1;
         MPI_Barrier(MPI_COMM_WORLD);
     }
 
